@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-num_data_points = 1000
+num_data_points = 10000
 time_interval = 1
 noise_stddev = 2
 
@@ -65,6 +65,16 @@ def generate_sensor_data(sensor_name):
         voltage_data = base_voltage + np.random.normal(0, noise_stddev, num_data_points)
         return voltage_data
 
+    elif sensor_name == "CamshaftPosition":
+        angular_velocity = 1
+        initial_position = 0
+
+        camshaft_position_data = (
+            initial_position + angular_velocity * time + np.random.normal(0, noise_stddev, num_data_points)
+        )
+        camshaft_position_data = camshaft_position_data % 360
+        return camshaft_position_data
+
 
 temperature_data = generate_sensor_data("Temperature")
 speed_data = generate_sensor_data("Speed")
@@ -75,6 +85,7 @@ map_data = generate_sensor_data("MAPSensor")
 oxygen_data = generate_sensor_data("OxygenSensor")
 rain_data = generate_sensor_data("RainSensor")
 voltage_data = generate_sensor_data("VoltageSensor")
+camshaft_position_data = generate_sensor_data("CamshaftPosition")
 
 data = pd.DataFrame({
     "Time": time,
@@ -87,6 +98,7 @@ data = pd.DataFrame({
     "OxygenSensor": oxygen_data,
     "RainSensor": rain_data,
     "VoltageSensor": voltage_data,
+    "CamshaftPosition": camshaft_position_data,
 })
 
 data.to_csv("sensor_data.csv", index=False)
