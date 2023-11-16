@@ -1,3 +1,5 @@
+import random
+
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
@@ -10,9 +12,21 @@ def generate_maintenance_records(num_records_per_vehicle=5):
     maintenance_records = []
 
     for vehicle_id in range(1, num_vehicles + 1):
+
+        unique_maintenance_types = np.random.choice(
+            ['Oil Change', 'Brake Replacement', 'Tire Rotation', 'Air Filter Replacement'],
+            size=min(num_records_per_vehicle, 4),
+            replace=False
+        )
+
         current_mileage = 0
-        for _ in range(num_records_per_vehicle):
-            maintenance_type = np.random.choice(['Oil Change', 'Brake Replacement', 'Tire Rotation', 'Air Filter Replacement'])
+        vehicle_timestamp = datetime.now() - timedelta(days=random.randint(1, 365),
+                                                       hours=np.random.randint(24),
+                                                       minutes=np.random.randint(60),
+                                                       seconds=np.random.randint(60),
+                                                       microseconds=0)
+
+        for maintenance_type in unique_maintenance_types:
             if maintenance_type in ['Oil Change', 'Tire Rotation']:
                 maintenance_category = 'Routine Maintenance'
                 maintenance_frequency = 'Every 3 months'
@@ -26,7 +40,11 @@ def generate_maintenance_records(num_records_per_vehicle=5):
                 maintenance_frequency = 'Every 6 months'
                 maintenance_severity = 'Low'
 
-            maintenance_date = datetime.now() - timedelta(days=np.random.randint(1, 365))
+            maintenance_date = datetime.now() - timedelta(days=random.randint(1, 365),
+                                                       hours=np.random.randint(24),
+                                                       minutes=np.random.randint(60),
+                                                       seconds=np.random.randint(60),
+                                                       microseconds=0)
 
             maintenance_cost = np.round(np.random.uniform(5000, 60000), 2)
 
@@ -34,8 +52,11 @@ def generate_maintenance_records(num_records_per_vehicle=5):
 
             current_mileage += np.random.randint(5000, 100000)
 
+            formatted_timestamp = vehicle_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+
             record = {
                 'VehicleID': vehicle_id,
+                'Timestamp': formatted_timestamp,
                 'MaintenanceType': maintenance_type,
                 'MaintenanceCategory': maintenance_category,
                 'MaintenanceFrequency': maintenance_frequency,
